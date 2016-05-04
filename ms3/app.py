@@ -311,6 +311,7 @@ class MS3App(tornado.web.Application):
 def get_bucket_name(req):
     host = req.host
     # get name from subdomain
+    _logger.info("Host is: " + str(host))
     return host.split(".")[0]
 
 def run(args=None):
