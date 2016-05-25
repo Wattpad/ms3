@@ -170,7 +170,7 @@ class ObjectHandler(BaseHandler):
             return
         entry = bucket.get_entry(key, version_id=version_id)
         if (bucket.versioned):
-                self.set_header('x-amz-version-id', '"%s"' % version_id)
+                self.set_header('x-amz-version-id', '%s' % version_id)
         if not entry:
             self.send_error(404)
         else:
@@ -213,7 +213,7 @@ class ObjectHandler(BaseHandler):
             entry = bucket.set_entry(key, self.request.body)
             self.set_header('ETag', '"%s"' % entry.etag)
             if (bucket.versioned):
-                self.set_header('x-amz-version-id', '"%s"' % entry.key.split(key + str("."))[1])
+                self.set_header('x-amz-version-id', '%s' % entry.key.split(key + str("."))[1])
 
     def head(self, key):
         name = get_bucket_name(self.request)
