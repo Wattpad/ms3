@@ -89,15 +89,6 @@ class BaseHandler(tornado.web.RequestHandler):
         self.finish()
 
 
-class CatchAllHandler(BaseHandler):
-    """ Debug handler for inspecting requests """
-    def get(self):
-        self.echo()
-
-    def post(self):
-        self.echo()
-
-
 class BucketHandler(BaseHandler):
     """ Handle for GET/PUT/DELETE operations on buckets """
     def get(self, name):
@@ -144,20 +135,6 @@ class BucketHandler(BaseHandler):
             return
         bucket.delete()
         self.set_status(204)
-
-
-class ListAllMyBucketsHandler(BaseHandler):
-    """ Handler for listing all buckets """
-    def get(self):
-        result = ListAllMyBucketsResponse(Bucket.get_all_buckets(self.datadir))
-        self.render_xml(result)
-
-    def delete(self):
-        shutil.rmtree(options.datadir, ignore_errors=True)
-        try:
-            os.makedirs(options.datadir)
-        except (IOError, OSError):
-            pass
 
 
 class ObjectHandler(BaseHandler):
@@ -289,10 +266,8 @@ class MS3App(tornado.web.Application):
         general_options.parse_options(args=args)
 
         handlers = [
-            (r".*/", BucketHandler),
-            (r".*:[0-9]+/(.*)", ObjectHandler),
-            (r".*/", ListAllMyBucketsHandler),
-            (r".*/.*", CatchAllHandler)
+            (r"/(.+)", ObjectHandler),
+            (r"/", BucketHandler)
         ]
 
         settings = {
