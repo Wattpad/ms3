@@ -204,7 +204,7 @@ class ObjectHandler(BaseHandler):
         else:
             self.set_header('ETag', '"%s"' % entry.etag)
             if (bucket.versioned):
-                self.set_header('x-amz-version-id', '"%s"' % entry.key.split(key + str("."))[1])
+                self.set_header('x-amz-version-id', '"%s"' % entry.version_id)
 
     def delete(self, key):
         name = get_bucket_name(self.request)
